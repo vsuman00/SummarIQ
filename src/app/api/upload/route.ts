@@ -1,6 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { writeFile, mkdir } from "fs/promises";
-import { join } from "path";
 import connectDB from "@/lib/mongodb";
 import DocumentModel from "@/models/Document";
 import { processFile, generateUniqueFilename } from "@/lib/utils";
@@ -55,28 +53,14 @@ export async function POST(request: NextRequest) {
     // Generate unique filename
     const uniqueFilename = generateUniqueFilename(file.name);
 
-    // Create uploads directory if it doesn't exist
-    const uploadsDir = join(process.cwd(), "uploads");
-    try {
-      await mkdir(uploadsDir, { recursive: true });
-    } catch {
-      // Directory already exists
-    }
-
-    // Save file locally
-    const filePath = join(uploadsDir, uniqueFilename);
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-    await writeFile(filePath, buffer);
-
-    // Connect to MongoDB and save metadata
+    // Connect to MongoDB and save document with content
     await connectDB();
     const document = new DocumentModel({
       filename: uniqueFilename,
       originalName: file.name,
       mimeType: file.type,
       size: file.size,
-      filePath: filePath,
+      content: textContent, // Store content directly in MongoDB
       uploadedAt: new Date(),
     });
 
@@ -88,7 +72,6 @@ export async function POST(request: NextRequest) {
       fileName: file.name,
       fileSize: file.size,
       textContent: textContent,
-      filePath: filePath,
     });
   } catch (error) {
     console.error("Upload error:", error);

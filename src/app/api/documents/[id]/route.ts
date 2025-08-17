@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { readFile } from 'fs/promises';
 import connectDB from '@/lib/mongodb';
 import DocumentModel from '@/models/Document';
-import { processFile } from '@/lib/utils';
 
 export async function GET(
   request: NextRequest,
@@ -29,24 +27,13 @@ export async function GET(
       );
     }
 
-    // Read the file content
-    let textContent = '';
-    try {
-      const fileBuffer = await readFile(document.filePath);
-      // Convert Buffer to ArrayBuffer for File constructor compatibility
-      const arrayBuffer = new ArrayBuffer(fileBuffer.length);
-      const uint8Array = new Uint8Array(arrayBuffer);
-      uint8Array.set(fileBuffer);
-      // Create a File object from the buffer to use processFile
-      const file = new File([arrayBuffer], document.originalName, {
-        type: document.mimeType
-      });
-      textContent = await processFile(file);
-    } catch (fileError) {
-      console.error('Error reading file:', fileError);
+    // Get the content directly from MongoDB document
+    const textContent = document.content || '';
+    
+    if (!textContent.trim()) {
       return NextResponse.json(
-        { error: 'Failed to read file content' },
-        { status: 500 }
+        { error: 'Document content is empty' },
+        { status: 400 }
       );
     }
 
