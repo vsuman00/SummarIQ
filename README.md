@@ -73,12 +73,25 @@ Before running this application, make sure you have:
 2. Start MongoDB service
 3. Use connection string: `mongodb://localhost:27017/meeting-notes-summarizer`
 
-**Option 2: MongoDB Atlas (Cloud)**
-1. Go to [MongoDB Atlas](https://www.mongodb.com/atlas)
-2. Create a free cluster
-3. Create a database user
-4. Get your connection string from "Connect" → "Connect your application"
-5. Replace `<password>` with your database user password
+**Option 2: MongoDB Atlas (Cloud) - Recommended**
+1. Go to [MongoDB Atlas](https://www.mongodb.com/atlas) and create a free account
+2. Create a new project and build a free cluster (M0 Sandbox)
+3. Configure network access:
+   - Go to "Network Access" in the left sidebar
+   - Click "Add IP Address" and select "Allow Access from Anywhere" (0.0.0.0/0) for development
+4. Create a database user:
+   - Go to "Database Access" in the left sidebar
+   - Click "Add New Database User"
+   - Choose "Password" authentication
+   - Create username and password (save these credentials)
+   - Grant "Read and write to any database" privileges
+5. Get your connection string:
+   - Go to "Clusters" and click "Connect" on your cluster
+   - Choose "Connect your application"
+   - Select "Node.js" and version "4.1 or later"
+   - Copy the connection string
+   - Replace `<username>`, `<password>`, and `<cluster>` in your `.env.local` file
+   - The format should be: `mongodb+srv://username:password@cluster.mongodb.net/meeting-notes-summarizer?retryWrites=true&w=majority`
 
 ### Google Gemini API Setup
 
