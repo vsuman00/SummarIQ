@@ -9,7 +9,7 @@ A modern web application that transforms meeting transcripts into intelligent su
 - **Custom Prompts**: Add specific instructions to tailor the summary to your needs
 - **Rich Text Editing**: Edit and refine summaries with a powerful WYSIWYG editor
 - **Email Sharing**: Send summaries to multiple recipients with customizable subjects
-- **Cloud Storage**: Secure file storage using Firebase
+- **Database**: Secure document storage using MongoDB
 - **Modern UI**: Beautiful, responsive design with Tailwind CSS and shadcn/ui
 
 ## 🛠️ Tech Stack
@@ -17,7 +17,7 @@ A modern web application that transforms meeting transcripts into intelligent su
 - **Frontend**: Next.js 15, React 19, TypeScript
 - **Styling**: Tailwind CSS, shadcn/ui components
 - **AI**: Google Gemini API
-- **Backend**: Firebase (Firestore, Storage)
+- **Database**: MongoDB with Mongoose ODM
 - **Email**: Nodemailer with Gmail SMTP
 - **File Processing**: Mammoth.js for DOCX files
 - **Rich Text Editor**: ReactQuill
@@ -27,7 +27,7 @@ A modern web application that transforms meeting transcripts into intelligent su
 Before running this application, make sure you have:
 
 1. **Node.js** (v18 or higher)
-2. **Firebase Project** with Firestore and Storage enabled
+2. **MongoDB Database** (local or MongoDB Atlas)
 3. **Google Gemini API Key**
 4. **Gmail Account** with App Password (for email functionality)
 
@@ -42,13 +42,10 @@ Before running this application, make sure you have:
    
    Update `.env.local` with your actual values:
    ```env
-   # Firebase Configuration
-   FIREBASE_API_KEY=your_firebase_api_key
-   FIREBASE_AUTH_DOMAIN=your_project_id.firebaseapp.com
-   FIREBASE_PROJECT_ID=your_project_id
-   FIREBASE_STORAGE_BUCKET=your_project_id.appspot.com
-   FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
-   FIREBASE_APP_ID=your_app_id
+   # MongoDB Configuration
+   MONGODB_URI=mongodb://localhost:27017/meeting-notes-summarizer
+   # Or for MongoDB Atlas:
+   # MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/meeting-notes-summarizer
    
    # Google Gemini API
    GEMINI_API_KEY=your_gemini_api_key
@@ -69,13 +66,19 @@ Before running this application, make sure you have:
 
 ## 🔑 Setup Instructions
 
-### Firebase Setup
+### MongoDB Setup
 
-1. Go to [Firebase Console](https://console.firebase.google.com/)
-2. Create a new project or select existing one
-3. Enable **Firestore Database** and **Storage**
-4. Get your Firebase configuration from Project Settings
-5. Add your domain to authorized domains in Authentication settings
+**Option 1: Local MongoDB**
+1. Install MongoDB on your system
+2. Start MongoDB service
+3. Use connection string: `mongodb://localhost:27017/meeting-notes-summarizer`
+
+**Option 2: MongoDB Atlas (Cloud)**
+1. Go to [MongoDB Atlas](https://www.mongodb.com/atlas)
+2. Create a free cluster
+3. Create a database user
+4. Get your connection string from "Connect" → "Connect your application"
+5. Replace `<password>` with your database user password
 
 ### Google Gemini API Setup
 
@@ -128,9 +131,10 @@ Before running this application, make sure you have:
    npm install --legacy-peer-deps
    ```
 
-2. **Firebase Connection Issues**
-   - Verify your Firebase configuration
-   - Check if Firestore and Storage are enabled
+2. **MongoDB Connection Issues**
+   - Verify your MongoDB connection string
+   - Check if MongoDB service is running (for local setup)
+   - Verify network access and credentials (for Atlas)
 
 3. **Email Not Sending**
    - Verify Gmail app password is correct
