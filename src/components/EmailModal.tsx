@@ -166,7 +166,7 @@ export default function EmailModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="sm:max-w-lg bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
         <DialogHeader className="pb-6">
           <DialogTitle className="flex items-center gap-3 text-2xl font-bold">
             <div className="p-3 bg-blue-100 rounded-2xl">
@@ -174,7 +174,7 @@ export default function EmailModal({
             </div>
             Share Summary via Email
           </DialogTitle>
-          <p className="text-gray-600 mt-2">
+          <p className="text-slate-700 dark:text-slate-300 mt-2">
             Send your meeting summary to multiple recipients
           </p>
         </DialogHeader>
@@ -211,7 +211,7 @@ export default function EmailModal({
           <div>
             <label
               htmlFor="meetingTitle"
-              className="block text-lg font-bold text-gray-800 mb-4"
+              className="block text-lg font-bold text-slate-900 dark:text-slate-100 mb-4"
             >
               Meeting Title
             </label>
@@ -230,7 +230,7 @@ export default function EmailModal({
           <div>
             <label
               htmlFor="subject"
-              className="block text-lg font-bold text-gray-800 mb-4"
+              className="block text-lg font-bold text-slate-900 dark:text-slate-100 mb-4"
             >
               Email Subject
             </label>
@@ -249,7 +249,7 @@ export default function EmailModal({
           {/* Email Recipients */}
           <div>
             <div className="flex items-center justify-between mb-4">
-              <label className="block text-lg font-bold text-gray-800">
+              <label className="block text-lg font-bold text-slate-900 dark:text-slate-100">
                 Recipients
               </label>
               <button
@@ -300,7 +300,7 @@ export default function EmailModal({
               ))}
             </div>
 
-            <p className="mt-2 text-xs text-gray-500">
+            <p className="mt-2 text-xs text-slate-600 dark:text-slate-400">
               You can add up to 10 email addresses. Each email will be validated
               before sending.
             </p>
@@ -308,12 +308,12 @@ export default function EmailModal({
 
           {/* Summary Preview */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-slate-800 dark:text-slate-200 mb-2">
               Summary Preview
             </label>
-            <div className="max-h-40 overflow-y-auto border border-gray-300 rounded-md p-3 bg-gray-50">
+            <div className="max-h-40 overflow-y-auto border border-slate-300 dark:border-slate-600 rounded-md p-3 bg-slate-50 dark:bg-slate-800">
               <div
-                className="text-sm text-gray-700 prose prose-sm max-w-none"
+                className="text-sm text-slate-800 dark:text-slate-200 prose prose-sm max-w-none"
                 dangerouslySetInnerHTML={{ __html: summary }}
               />
             </div>
