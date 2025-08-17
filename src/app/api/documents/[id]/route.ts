@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { auth } from '@clerk/nextjs/server';
 import connectDB from '@/lib/mongodb';
 import DocumentModel from '@/models/Document';
 
@@ -7,6 +8,12 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    // Check authentication
+    const { userId } = await auth();
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const { id } = await params;
 
     if (!id) {
@@ -18,7 +25,7 @@ export async function GET(
 
     // Connect to MongoDB and fetch document
     await connectDB();
-    const document = await DocumentModel.findById(id);
+    const document = await DocumentModel.findOne({ _id: id, userId: userId });
 
     if (!document) {
       return NextResponse.json(
@@ -63,6 +70,12 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    // Check authentication
+    const { userId } = await auth();
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const { id } = await params;
     const body = await request.json();
     const { summary } = body;
@@ -83,7 +96,7 @@ export async function PATCH(
 
     // Connect to MongoDB and update document
     await connectDB();
-    const document = await DocumentModel.findById(id);
+    const document = await DocumentModel.findOne({ _id: id, userId: userId });
 
     if (!document) {
       return NextResponse.json(

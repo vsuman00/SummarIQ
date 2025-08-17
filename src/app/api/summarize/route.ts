@@ -1,10 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { auth } from '@clerk/nextjs/server';
 import connectDB from '@/lib/mongodb';
 import DocumentModel from '@/models/Document';
 import { generateSummary } from '@/lib/gemini';
 
 export async function POST(request: NextRequest) {
   try {
+    // Check authentication
+    const { userId } = await auth();
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const body = await request.json();
     const { documentId, transcript, customPrompt } = body;
 
@@ -38,9 +45,9 @@ export async function POST(request: NextRequest) {
       try {
         await connectDB();
         
-        // Check if document exists and update with summary
-        const updatedDoc = await DocumentModel.findByIdAndUpdate(
-          documentId,
+        // Check if document exists and belongs to user, then update with summary
+        const updatedDoc = await DocumentModel.findOneAndUpdate(
+          { _id: documentId, userId: userId },
           {
             summary: summary,
             summaryGeneratedAt: new Date()

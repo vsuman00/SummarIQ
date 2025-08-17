@@ -6,6 +6,7 @@ export interface IDocument extends MongoDocument {
   mimeType: string;
   size: number;
   content: string;
+  userId: string;
   uploadedAt: Date;
   summary?: string;
   summaryGeneratedAt?: Date;
@@ -30,6 +31,10 @@ const DocumentSchema = new Schema<IDocument>({
     required: true
   },
   content: {
+    type: String,
+    required: true
+  },
+  userId: {
     type: String,
     required: true
   },

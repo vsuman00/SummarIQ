@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { FileText, Sparkles, ArrowRight } from 'lucide-react';
+import { SignInButton, SignUpButton, UserButton, useUser } from '@clerk/nextjs';
 import FileUpload from '@/components/FileUpload';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { Button } from '@/components/ui/button';
@@ -16,6 +17,7 @@ export default function HomePage() {
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const { isSignedIn, user } = useUser();
 
   const handleFileSelect = (selectedFile: File) => {
     setError(null);
@@ -70,7 +72,9 @@ export default function HomePage() {
       <div className="container mx-auto px-4 py-12">
         {/* Header */}
         <div className="text-center mb-16">
-          <div className="flex items-center justify-center mb-8">
+          {/* Navigation Bar */}
+          <div className="flex justify-between items-center mb-8">
+            <div className="flex-1"></div>
             <Image 
               src="/summariq-logo.svg" 
               alt="SummarIQ" 
@@ -78,6 +82,27 @@ export default function HomePage() {
               height={128}
               className="mx-auto"
             />
+            <div className="flex-1 flex justify-end">
+              {isSignedIn ? (
+                <div className="flex items-center gap-4">
+                  <span className="text-gray-700">Welcome, {user?.firstName || 'User'}!</span>
+                  <UserButton afterSignOutUrl="/" />
+                </div>
+              ) : (
+                <div className="flex gap-3">
+                  <SignInButton mode="modal">
+                    <Button variant="outline" className="px-6 py-2">
+                      Sign In
+                    </Button>
+                  </SignInButton>
+                  <SignUpButton mode="modal">
+                    <Button className="px-6 py-2 bg-blue-600 hover:bg-blue-700">
+                      Sign Up
+                    </Button>
+                  </SignUpButton>
+                </div>
+              )}
+            </div>
           </div>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
             Transform your meeting transcripts into intelligent summaries using AI.

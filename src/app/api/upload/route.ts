@@ -1,10 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
+import { auth } from '@clerk/nextjs/server';
 import connectDB from "@/lib/mongodb";
 import DocumentModel from "@/models/Document";
 import { processFile, generateUniqueFilename } from "@/lib/utils";
 
 export async function POST(request: NextRequest) {
   try {
+    // Check authentication
+    const { userId } = await auth();
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
     const formData = await request.formData();
     const file = formData.get("file") as File;
 
@@ -61,6 +67,7 @@ export async function POST(request: NextRequest) {
       mimeType: file.type,
       size: file.size,
       content: textContent, // Store content directly in MongoDB
+      userId: userId,
       uploadedAt: new Date(),
     });
 

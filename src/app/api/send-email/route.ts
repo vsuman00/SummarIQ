@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { auth } from '@clerk/nextjs/server';
 import nodemailer from 'nodemailer';
 import { parseEmailList, isValidEmail } from '@/lib/utils';
 
@@ -99,6 +100,12 @@ const generateEmailHTML = (summary: string, meetingTitle?: string) => {
 
 export async function POST(request: NextRequest) {
   try {
+    // Check authentication
+    const { userId } = await auth();
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const body = await request.json();
     const { emails, summary, subject, meetingTitle } = body;
 

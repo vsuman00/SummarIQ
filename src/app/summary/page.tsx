@@ -11,6 +11,7 @@ import {
   Sparkles,
   Loader2,
 } from "lucide-react";
+import { UserButton, useUser } from '@clerk/nextjs';
 import EmailModal from "@/components/EmailModal";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { Button } from "@/components/ui/button";
@@ -28,6 +29,7 @@ interface DocumentData {
 function SummaryPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { isSignedIn, user } = useUser();
 
   const [documentData, setDocumentData] = useState<DocumentData | null>(null);
   const [editableSummary, setEditableSummary] = useState("");
@@ -262,7 +264,7 @@ function SummaryPageContent() {
               />
             </div>
 
-            <div className="flex gap-4">
+            <div className="flex items-center gap-4">
               <Button
                 onClick={handleRegenerateSummary}
                 disabled={isGenerating || isRegenerating}
@@ -284,6 +286,13 @@ function SummaryPageContent() {
                 <Mail className="h-5 w-5" />
                 Share via Email
               </Button>
+
+              {isSignedIn && (
+                <div className="flex items-center gap-3 ml-4">
+                  <span className="text-gray-700 font-medium">Welcome, {user?.firstName || 'User'}!</span>
+                  <UserButton afterSignOutUrl="/" />
+                </div>
+              )}
             </div>
           </div>
         </div>
