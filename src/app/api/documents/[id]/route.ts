@@ -33,8 +33,12 @@ export async function GET(
     let textContent = '';
     try {
       const fileBuffer = await readFile(document.filePath);
+      // Convert Buffer to ArrayBuffer for File constructor compatibility
+      const arrayBuffer = new ArrayBuffer(fileBuffer.length);
+      const uint8Array = new Uint8Array(arrayBuffer);
+      uint8Array.set(fileBuffer);
       // Create a File object from the buffer to use processFile
-      const file = new File([fileBuffer], document.originalName, {
+      const file = new File([arrayBuffer], document.originalName, {
         type: document.mimeType
       });
       textContent = await processFile(file);
